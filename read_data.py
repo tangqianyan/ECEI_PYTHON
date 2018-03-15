@@ -41,12 +41,12 @@ def CR2IPeast2012(CHANNEL,ROW):
     return (IP,CH)
 
 def loadeceieast1(SHOT,Channel,Row,Time,DIR,Fs=1e6,Default=0):
-    
+
     if SHOT < 44000:
         [IP,CH] = CR2IPeast2012(Channel,Row)
 
         # the number of data acquisition before triger
-        PRE = 1e5 
+        PRE = 1e5
     else:
         print ("SHOT should <44000")
 #    elif SHOT < 60000:
@@ -56,7 +56,7 @@ def loadeceieast1(SHOT,Channel,Row,Time,DIR,Fs=1e6,Default=0):
 #        [IP,CH] = CR2IPeast2015(Channel,Row)
 
     # set shot directory
-    shot_dir = DIR + "SHOT." + str(SHOT).zfill(6) + r"/acq132_" + str(IP) + r"/CH" + str(CH)
+    shot_dir = DIR + "SHOT." + str(SHOT).zfill(6) + r"/acq132_" + str(IP) + r"/CH" + str(CH).zfill(2)
 
     # read data
     tmp = scan(shot_dir,Time,Fs,PRE)
