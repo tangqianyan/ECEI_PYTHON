@@ -1,5 +1,6 @@
 from __future__ import division
 import numpy as np
+import codecs 
 import struct
 import math
 
@@ -72,7 +73,45 @@ def loadeceieast1(SHOT,Channel,Row,Time,DIR,Fs=1e6,Default=0):
     return tmp
 
 
+def read_data(DIR,SHOT,START_END_TIME):
 
+    CH = 24
+    ROW = 16
+    Fs = 1e6
+    length = int(round((START_END_TIME[1]-START_END_TIME[0])*Fs))
+
+    data = np.empty((CH,ROW,length))
+
+    SHOT = int(SHOT)
+    #while START_END_TIME[0] < START_END_TIME[1]:
+    for i_ch in range(1,CH+1):
+        for i_row in range(1,ROW+1):
+            data_one = loadeceieast1(SHOT,i_ch,i_row,START_END_TIME,DIR,Fs,1)
+            data[i_ch-1,i_row-1,:] = data_one
+
+    #data = np.array(data)
+    print (data.shape[2])
+    return data
+
+
+def get_data(DIR,START_END_TIME,DURATION):
+
+    CH =24
+    ROW = 16
+
+    with codecs.open('./config/shot_number.txt',"r","utf-8") as fid:
+        SHOT_LIST = []
+        for line in fid:
+            if line == '\n':
+                continue
+            line = line.strip()
+            SHOT_LIST.append(line)
+
+    for SHOT in SHOT_LIST:
+        data = read_data(DIR,SHOT,START_END_TIME)
+
+    return data
+ 
 #if __name__ == "__main__":
-#    tmp = loadeceieast1(42987,6,6,[6.00,6.0001],r"/home/chixiao/projects/ECEI/",1e6,0)
+#    tmp = loadeceieast1(42987,24,16,[0.00,0.0001],r"/home/chixiao/projects/ECEI/",1e6,0)
 #    print(tmp)
